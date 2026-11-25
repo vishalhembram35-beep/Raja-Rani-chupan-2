@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rajarani Coupon Result</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background-color: #f36d8d; /* Screenshot wala Pink background */
+            padding: 15px 10px;
+            color: #000;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Left Top Reports Menu Box */
+        .reports-box {
+            width: 155px;
+            background-color: #e6f0ff;
+            border: 1px solid #b8cce4;
+            padding: 5px 8px;
+            margin-top: 25px;
+            margin-bottom: 8px;
+            font-size: 11px;
+        }
+
+        .reports-title {
+            color: #1f4e78;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .reports-box a {
+            display: block;
+            color: #0000ee;
+            text-decoration: underline;
+            margin-bottom: 4px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .reports-box a:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Date Filter Section */
+        .filter-section {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .date-input {
+            padding: 3px 6px;
+            font-size: 12px;
+            border: 1px solid #767676;
+            background-color: #fff;
+            width: 110px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .show-btn {
+            padding: 3px 12px;
+            font-size: 12px;
+            background-color: #efefef;
+            border: 1px solid #767676;
+            border-radius: 2px;
+            cursor: pointer;
+            color: #000;
+        }
+
+        .show-btn:active {
+            background-color: #dcdcdc;
+        }
+
+        /* Result Table Styling */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #000;
+            font-size: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        th, td {
+            border: 1px solid #000;
+            padding: 5px 4px;
+            white-space: nowrap;
+        }
+
+        /* Table Header Color */
+        thead th {
+            background-color: #fdfd96;
+            color: #000;
+            padding: 7px 4px;
+            font-size: 10.5px;
+        }
+
+        /* Alternate Row Colors (Olive-Yellow & Light-Yellow) */
+        tbody tr:nth-child(odd) {
+            background-color: #d4d68c;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #fdfd96;
+        }
+
+        /* Column Widths */
+        .col-time { width: 16%; }
+        .col-coupon { width: 16%; }
+        .col-result { width: 10%; }
+        .col-name { width: 36%; }
+        .col-cresult { width: 22%; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Top Left Reports Menu -->
+    <div class="reports-box">
+        <div class="reports-title">Reports</div>
+        <a onclick="menuClick('Result')">Result</a>
+        <a onclick="menuClick('Coupon Details')">Coupon Details</a>
+        <a onclick="menuClick('Ledger Details')">Ledger Details</a>
+        <a onclick="menuClick('Change Pin')">Change Pin</a>
+        <a onclick="menuClick('Exit')">Exit</a>
+    </div>
+
+    <!-- Date & Show Button -->
+    <div class="filter-section">
+        <label for="dateInput">Date</label>
+        <input type="date" id="dateInput" class="date-input" value="2026-11-25">
+        <button class="show-btn" onclick="filterResults()">Show</button>
+    </div>
+
+    <!-- Result Table -->
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th class="col-time">Draw Time</th>
+                    <th class="col-coupon">Coupon</th>
+                    <th class="col-result">Result</th>
+                    <th class="col-name">Coupon Name</th>
+                    <th class="col-cresult">Coupon Result</th>
+                </tr>
+            </thead>
+            <tbody id="resultTableBody">
+                <!-- Rows JavaScript se automatic load honge -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // Screenshot ka exact data
+    const drawData = [
+        { time: "8:30AM", coupon: "RAJARANI", result: "94", name: "RAJARANI PAHLA DAW", cResult: "" },
+        { time: "9:00AM", coupon: "RAJARANI", result: "16", name: "RAJARANI SUBAH", cResult: "" },
+        { time: "9:30AM", coupon: "RAJARANI", result: "54", name: "RAJARANI KIRAN", cResult: "" },
+        { time: "10:00AM", coupon: "RAJARANI", result: "28", name: "RAJARANI HINDUSTANI", cResult: "" },
+        { time: "10:30AM", coupon: "RAJARANI", result: "96", name: "RAJARANI PRABHAT", cResult: "" },
+        { time: "11:00AM", coupon: "RAJARANI", result: "05", name: "RAJARANI LAJAWAB", cResult: "" },
+        { time: "11:30AM", coupon: "RAJARANI", result: "38", name: "RAJARANI SAMRAT", cResult: "" },
+        { time: "12:00PM", coupon: "RAJARANI", result: "74", name: "RAJARANI DELUXE", cResult: "" },
+        { time: "12:30PM", coupon: "RAJARANI", result: "09", name: "RAJARANI NOON", cResult: "" },
+        { time: "1:00PM", coupon: "RAJARANI", result: "75", name: "RAJARANI KING", cResult: "" },
+        { time: "1:30PM", coupon: "RAJARANI", result: "61", name: "RAJARANI ROYAL", cResult: "" },
+        { time: "2:00PM", coupon: "RAJARANI", result: "70", name: "RAJARANI MILLENIUM", cResult: "" },
+        { time: "2:30PM", coupon: "RAJARANI", result: "57", name: "RAJARANI HUNDRED", cResult: "" },
+        { time: "3:00PM", coupon: "RAJARANI", result: "01", name: "RAJARANI DAIMOND", cResult: "" },
+        { time: "3:30PM", coupon: "RAJARANI", result: "31", name: "RAJARANI SONA", cResult: "" },
+        { time: "4:00PM", coupon: "RAJARANI", result: "51", name: "RAJARANI EXPRESS", cResult: "" },
+        { time: "4:30PM", coupon: "RAJARANI", result: "68", name: "RAJARANI SPEASAL", cResult: "" },
+        { time: "5:00PM", coupon: "RAJARANI", result: "06", name: "RAJARANI SANDHIA", cResult: "" },
+        { time: "5:30PM", coupon: "RAJARANI", result: "42", name: "RAJARANI CHANDNI", cResult: "" },
+        { time: "6:00PM", coupon: "RAJARANI", result: "32", name: "RAJARANI SHAM", cResult: "" }
+    ];
+
+    // Table mein data bharne ka function
+    function renderTable(data) {
+        const tbody = document.getElementById("resultTableBody");
+        tbody.innerHTML = "";
+
+        data.forEach(row => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${row.time}</td>
+                <td>${row.coupon}</td>
+                <td>${row.result}</td>
+                <td>${row.name}</td>
+                <td>${row.cResult}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // Show button click karne par
+    function filterResults() {
+        const selectedDate = document.getElementById("dateInput").value;
+        alert("Showing results for Date: " + selectedDate);
+        renderTable(drawData);
+    }
+
+    // Reports menu links ke liye
+    function menuClick(option) {
+        if (option === 'Exit') {
+            alert("Exiting panel...");
+        } else {
+            alert(option + " page selected!");
+        }
+    }
+
+    // Page khulte hi table load karein
+    window.onload = () => {
+        renderTable(drawData);
+    };
+</script>
+
+</body>
+</html>
